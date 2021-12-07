@@ -16,11 +16,6 @@ let vectors = lines |> List.map parseLine
 
 // PART 1
 
-let maxX = vectors |> List.map (fun v -> max v.x1 v.x2) |> List.max
-let maxY = vectors |> List.map (fun v -> max v.y1 v.y2) |> List.max
-
-let grid = {1..maxY} |> Seq.toList |> List.map (fun _ -> {1..maxX} |> Seq.toList |> List.map (fun _ -> 0))
-
 let pointsX v = {(v.x1)..(if v.x2 < v.x1 then -1 else 1)..(v.x2)} |> Seq.toList
 let pointsY v = {(v.y1)..(if v.y2 < v.y1 then -1 else 1)..(v.y2)} |> Seq.toList
 
@@ -31,9 +26,9 @@ let vectorToPoints v =
 
 let points = vectors |> List.filter (fun v -> v.x1 = v.x2 || v.y1 = v.y2) |> List.map vectorToPoints |> List.fold (fun ps p-> p @ ps) []
 
-let groups = List.groupBy (fun x -> x) points |> List.map (snd >> List.length) |> List.filter (fun x -> x > 1) |> List.length
+let groups points = List.groupBy (fun x -> x) points |> List.map (snd >> List.length) |> List.filter (fun x -> x > 1) |> List.length
 
-let part1 = sprintf "%d" groups
+let part1 = sprintf "%d" <| groups points
 
 // PART 2
 
@@ -42,9 +37,6 @@ let vectorToPointsDiagonal v =
     then List.zip (pointsX v) (pointsY v) 
     else vectorToPoints v
 
+let pointsDiag = vectors |> List.map vectorToPointsDiagonal |> List.fold (fun ps p-> p @ ps) []
 
-let points2 = vectors |> List.map vectorToPointsDiagonal |> List.fold (fun ps p-> p @ ps) []
-
-let groups2 = List.groupBy (fun x -> x) points2 |> List.map (snd >> List.length) |> List.filter (fun x -> x > 1) |> List.length
-
-let part2 = sprintf "%d" groups2
+let part2 = sprintf "%d" <| groups pointsDiag
