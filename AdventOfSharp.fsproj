@@ -71,7 +71,7 @@
 	<Content Include="00\test.txt">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
-	<Compile Include="00\01.fs" />
+	<Compile Include="00\00.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
