@@ -4,30 +4,27 @@
 
 let lines = System.IO.File.ReadLines("06/data.txt") 
 
-let fish = (Seq.head lines).Split "," |> Array.map int |> Array.toSeq
+let fish = (Seq.head lines).Split "," |> Array.map int |> Array.toList
 
 // PART 1
 
-let fishAges = fish |> (Seq.groupBy id)
+let fishAges = fish |> (List.groupBy id)
 
-let getAge (i:int) = if Seq.exists (fun age -> fst age = i) fishAges then Seq.find (fun age -> fst age = i) fishAges |> (int64 << Seq.length << snd) else 0L
+let startAges = Array.create 9 0L
 
-let startAges = Array.init 9 getAge
+for age in fishAges do startAges[fst age] <- snd age |> List.length |> int64
 
-let rec generation i a (ages:int64[]) = 
-    match i with 
-    | 0 -> generation (i+1) ages[i] <| Array.tail ages
-    | 7 -> (ages[0] + a) :: (generation (i+1) a <| Array.tail ages)
-    | 9 -> [a]
-    | _ -> ages[0] :: (generation (i+1) a <| Array.tail ages)
+let generation (ages:int64 list) = ages.Tail @ [ ages.Head ] |> List.mapi (fun i f -> if i = 6 then f + ages.Head else f )
 
-let rec numEndFish n (ages:int64[]) = 
+let rec finalGeneration n (ages:int64 list) = 
     match n with
     | 0 -> ages
-    | _ -> numEndFish (n-1) <| List.toArray (generation 0 0 ages)
+    | _ -> ages |> generation |> finalGeneration (n-1)
 
-let part1 = sprintf "%d" <| (Array.sum <| numEndFish 80 startAges)
+let numEndFish n = List.sum <| (startAges |> Array.toList |> finalGeneration n)
+
+let part1 = sprintf "%d" <|  numEndFish 80
 
 //PART 2
 
-let part2 = sprintf "%d" <| (Array.sum <| numEndFish 256 startAges)
+let part2 = sprintf "%d" <| numEndFish 256
