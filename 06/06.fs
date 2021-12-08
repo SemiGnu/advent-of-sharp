@@ -2,51 +2,32 @@
 
 // PARSING 
 
-let lines = System.IO.File.ReadLines("06/test2.txt") 
+let lines = System.IO.File.ReadLines("06/data.txt") 
 
 let fish = (Seq.head lines).Split "," |> Array.map int |> Array.toSeq
+
 // PART 1
 
-let rec endFish n (fish:seq<int>) = 
-    match n with 
-    | 0 -> fish
-    | _ -> endFish (n - 1) <| Seq.fold (fun fs f -> if f = 0 then 8::6::fs else (f - 1)::fs) [] fish
+let fishAges = fish |> (Seq.groupBy id)
 
-let numEndFish n = Seq.length <| endFish n fish
+let getAge (i:int) = if Seq.exists (fun age -> fst age = i) fishAges then Seq.find (fun age -> fst age = i) fishAges |> (int64 << Seq.length << snd) else 0L
 
-let part1 = sprintf "%d" <| numEndFish 80
+let startAges = Array.init 9 getAge
 
-// PART 2
+let rec generation i a (ages:int64[]) = 
+    match i with 
+    | 0 -> generation (i+1) ages[i] <| Array.tail ages
+    | 7 -> (ages[0] + a) :: (generation (i+1) a <| Array.tail ages)
+    | 9 -> [a]
+    | _ -> ages[0] :: (generation (i+1) a <| Array.tail ages)
 
-//let rec getFish age n =
-//    match age with 
-//    | 0 when n > 0 -> 1 + (pown 2 (n/7)) + getFish 8 n
-//    | 0 -> 0
-//    | _ -> getFish (age-1) (n-1) 
-//let rec getFish age n =
-//    match n with 
-//    | 0 -> 1
-//    | nn when age = 0 -> (pown 2 ((nn)/7)-1) + getFish 8 (nn-1) 
-//    | nn -> getFish (age-1) (nn-1) 
-    
-//let numEndFish2 n = getFish 3 n
-        
-//let test1  = {1..30} |> Seq.toList |> List.map numEndFish
-//let test2  = {1..30} |> Seq.toList |> List.map numEndFish2
+let rec numEndFish n (ages:int64[]) = 
+    match n with
+    | 0 -> ages
+    | _ -> numEndFish (n-1) <| List.toArray (generation 0 0 ages)
 
-//let hm = List.zip test1 test2
+let part1 = sprintf "%d" <| (Array.sum <| numEndFish 80 startAges)
 
-let ageFish = Seq.map ((-) 1)
-let resetFish = Seq.filter ((>=) 0) 
-let numNewFish = Seq.length << ( Seq.filter ((<) 0) )
-let newFish fish = Seq.append (resetFish ( ageFish fish ) )  ( Seq.concat <| Seq.init (numNewFish fish) (fun _ -> (List.toSeq [6;8])) )
+//PART 2
 
-let rec endFish2 n fish = 
-    match n with 
-    | 0 -> fish
-    | _ -> endFish2 (n-1) <| newFish fish
-
-     
-let numEndFish2 n = Seq.length <| endFish n fish       
-    
-let part2 = sprintf "%d" <| numEndFish2 200
+let part2 = sprintf "%d" <| (Array.sum <| numEndFish 256 startAges)
