@@ -2,7 +2,7 @@
 
 // PARSING
 
-let lines = System.IO.File.ReadLines("01/data.txt")
+let lines = System.IO.File.ReadLines("00/data.txt")
 
 // PART 1
 
