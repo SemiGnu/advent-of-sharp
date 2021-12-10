@@ -26,4 +26,4 @@ let newScores = [ ')',1L;']',2L;'}',3L;'>',4L ] |> Map.ofList
 
 let newScore chars = chars |> Seq.map (fun c -> pairs[c]) |> Seq.rev |> Seq.fold (fun s c -> s * 5L + newScores[c]) 0L
 
-let part2 = sprintf "%d" <| let scores = lines |> Seq.map simplify |> Seq.filter (not << List.exists (not << pairs.ContainsKey)) |> Seq.map newScore |> Seq.sort |> Seq.toArray in scores[scores.Length / 2] 
+let part2 = sprintf "%d" <| let scores = lines |> Seq.map simplify |> Seq.filter (List.forall pairs.ContainsKey) |> Seq.map newScore |> Seq.sort |> Seq.toArray in scores[scores.Length / 2] 
