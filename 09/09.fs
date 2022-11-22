@@ -1,4 +1,4 @@
-﻿module _09
+module _09
 
 // PARSING
 
