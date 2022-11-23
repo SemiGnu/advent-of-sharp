@@ -1,5 +1,4 @@
 import numpy as np
-from collections import defaultdict
 import itertools
 
 x_range = range(143,178)
