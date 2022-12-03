@@ -6,11 +6,6 @@ import (
 	"github.com/samber/lo"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 func scoreLine(line string) int {
 	f, s := line[0]-'A', line[2]-'X'
 	return int(((s-f+4)%3)*3 + 1 + s)
