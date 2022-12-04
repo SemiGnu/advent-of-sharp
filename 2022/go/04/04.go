@@ -26,26 +26,24 @@ func parseLine(line string) ([]int, []int) {
 	return makeRange(r[1], r[2]), makeRange(r[3], r[4])
 }
 
-func fullOverlap(f []int, s []int) bool {
+func fullOverlap(line string) bool {
+	f, s := parseLine(line)
 	a, b := lo.Difference(f, s)
 	return len(a) == 0 || len(b) == 0
 }
 
-func anyOverlap(f []int, s []int) bool {
+func anyOverlap(line string) bool {
+	f, s := parseLine(line)
 	a, b := lo.Difference(f, s)
 	return len(a) < len(f) || len(b) < len(s)
 }
 
 func Part1(lines []string) {
-	contains := lo.Filter(lines, func(line string, _ int) bool {
-		return fullOverlap(parseLine(line))
-	})
-	fmt.Println(len(contains))
+	overlaps := lo.CountBy(lines, fullOverlap)
+	fmt.Println(overlaps)
 }
 
 func Part2(lines []string) {
-	contains := lo.Filter(lines, func(line string, _ int) bool {
-		return anyOverlap(parseLine(line))
-	})
-	fmt.Println(len(contains))
+	overlaps := lo.CountBy(lines, anyOverlap)
+	fmt.Println(overlaps)
 }
