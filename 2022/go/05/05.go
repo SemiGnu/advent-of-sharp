@@ -83,11 +83,15 @@ func execute(stack map[int]*stack[rune], instructions []instruction) {
 	}
 }
 
-func execute2(stack map[int]*stack[rune], instructions []instruction) {
+func execute2(s map[int]*stack[rune], instructions []instruction) {
 	for _, instruction := range instructions {
-		div := stack[instruction.from].position - instruction.amount
-		stack[instruction.from]._stack = stack[instruction.from]._stack[:div]
-		stack[instruction.to]._stack = append(stack[instruction.to]._stack, stack[instruction.from]._stack[div:]...)
+		temp := stack[rune]{_stack: make([]rune, 300), position: -1}
+		for i := 0; i < instruction.amount; i++ {
+			temp.push(s[instruction.from].pop())
+		}
+		for i := 0; i < instruction.amount; i++ {
+			s[instruction.to].push(temp.pop())
+		}
 	}
 }
 

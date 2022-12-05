@@ -16,7 +16,7 @@ func check(e error) {
 
 func main() {
 	d := "05"
-	test := 1
+	test := 0
 	fileName := fmt.Sprintf("%s/input.txt", d)
 	if test == 1 {
 		fileName = fmt.Sprintf("%s/test.txt", d)
