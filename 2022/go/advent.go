@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	day "github.com/semignu/advent-of-sharp/04"
+	day "github.com/semignu/advent-of-sharp/05"
 )
 
 func check(e error) {
@@ -15,8 +15,8 @@ func check(e error) {
 }
 
 func main() {
-	d := "04"
-	test := 0
+	d := "05"
+	test := 1
 	fileName := fmt.Sprintf("%s/input.txt", d)
 	if test == 1 {
 		fileName = fmt.Sprintf("%s/test.txt", d)
