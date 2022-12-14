@@ -16,7 +16,7 @@ func check(e error) {
 
 func main() {
 	d := "07"
-	test := 1
+	test := 0
 	fileName := fmt.Sprintf("%s/input.txt", d)
 	if test == 1 {
 		fileName = fmt.Sprintf("%s/test.txt", d)
@@ -24,7 +24,7 @@ func main() {
 	dat, err := os.ReadFile(fileName)
 	check(err)
 	file := string(dat)
-	lines := strings.Split(file, "\r\n")
+	lines := strings.Split(file, "\n")
 	fmt.Println("Day", d, "\r\n------\r\nPart 1:")
 	day.Part1(lines)
 	fmt.Println("\r\nPart 2:")
