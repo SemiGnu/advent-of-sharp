@@ -1,3 +1,3 @@
-import { part1, part2 } from "./04/day";
+import { part1, part2 } from "./05/day";
 
-console.log(part2(false));
+console.log(part1(true));
