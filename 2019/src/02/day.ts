@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { Runtime } from '../intcode/intcode';
 
 
 function getInstructions(test: boolean): string[] {
@@ -6,29 +7,12 @@ function getInstructions(test: boolean): string[] {
     return fs.readFileSync(file, 'utf8').split(',');
 }
 
-
-function execute(program: number[], noun: number, verb: number ) : number {
-    program[1] = noun;
-    program[2] = verb;
-
-    let pointer = -1;
-    let halt = false;
-    while (!halt) {
-        switch (program[++pointer]) {
-            case 1:
-                const sum = program[program[++pointer]] + program[program[++pointer]]
-                program[program[++pointer]] = sum;
-                break;
-            case 2:
-                const prod = program[program[++pointer]] * program[program[++pointer]]
-                program[program[++pointer]] = prod;
-                break;
-            default:
-                halt = true;
-                break;
-        }
-    }
-    return program[0]
+function execute(program: number[], noun: number, verb: number): number {
+    let runtime = new Runtime(program);
+    runtime.program[1] = noun;
+    runtime.program[2] = verb;
+    runtime.run();
+    return runtime.program[0];
 }
 
 
