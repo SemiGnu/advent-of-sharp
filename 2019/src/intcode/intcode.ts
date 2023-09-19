@@ -28,6 +28,7 @@ export class Runtime {
 
     ioContinue(...inputs: number[]): number[] {
         this.inputs = inputs.reverse();
+        this.outputs = [];
         this.run();
         return this.outputs;
     }
@@ -38,28 +39,24 @@ export class Runtime {
     }
 
     getValue(mode: string): number {
-        let value = 0;
         switch (mode) {
             case '0':
-                value = this.program[this.program[this.pointer++]] ?? 0;
-                break;
+                return this.program[this.program[this.pointer++]] ?? 0;
             case '1':
-                value = this.program[this.pointer++] ?? 0;
-                break;
+                return this.program[this.pointer++] ?? 0;
             case '2':
-                value = this.program[this.realtiveBase + this.program[this.pointer++]] ?? 0;
-                break;
+                return this.program[this.realtiveBase + this.program[this.pointer++]] ?? 0;
             default:
                 throw new Error(`Halted on mode '${mode}'`);
         }
-        console.log(value)
-        return value;
     }
 
-    setValue(value: number) {
+    setValue(value: number, mode: string) {
         if (value > 9007199254740991) throw new Error("FUCK");
-        console.log(`Storing ${value} at:`)
-        const location = this.getValue('1')
+        const location = mode == '0'
+            ? this.program[this.pointer++] ?? 0
+            : this.realtiveBase + (this.program[this.pointer++] ?? 0);
+
         if (this.program.length <= location) {
             this.program = [...this.program, ...[...Array(location - this.program.length + 1)].map(_ => 0)]
         }
@@ -72,49 +69,40 @@ export class Runtime {
         this.operations++;
         switch (instruction) {
             case '01': // add
-                console.log("add")
                 const sum = this.getValue(modes[2]) + this.getValue(modes[1]);
-                this.setValue(sum);
+                this.setValue(sum, modes[0]);
                 return true;
             case '02': // multiply
-                console.log("multiply")
                 const product = this.getValue(modes[2]) * this.getValue(modes[1]);
-                this.setValue(product);
+                this.setValue(product, modes[0]);
                 return true;
             case '03': // input
                 if(!this.inputs.length) {
                     this.pointer--;
                     return false;
                 }
-                console.log("input")
-                this.setValue(this.inputs.pop() ?? 0);
+                this.setValue(this.inputs.pop() ?? 0, modes[2]);
                 return true;
             case '04': // output
-                console.log("output")
                 this.outputs.push(this.getValue(modes[2]));
                 return true;
             case '05': // jump-if-true
-                console.log("jump-if-true")
                 const isTrue = this.getValue(modes[2]) != 0;
                 this.pointer = isTrue ? this.getValue(modes[1]) : this.pointer + 1;
                 return true;
             case '06': // jump-if-false
-                console.log("jump-if-false")
                 const isFalse = this.getValue(modes[2]) == 0;
                 this.pointer = isFalse ? this.getValue(modes[1]) : this.pointer + 1;
                 return true;
             case '07': // less than
-                console.log("less than")
                 const lt = this.getValue(modes[2]) < this.getValue(modes[1]);
-                this.setValue(lt ? 1 : 0);
+                this.setValue(lt ? 1 : 0, modes[0]);
                 return true;
             case '08': // equals
-                console.log("equals")
                 const eq = this.getValue(modes[2]) == this.getValue(modes[1]);
-                this.setValue(eq ? 1 : 0);
+                this.setValue(eq ? 1 : 0, modes[0]);
                 return true;
             case '09': // adjust relavite base
-                console.log("adjust relavite base")
                 this.realtiveBase += this.getValue(modes[2]);
                 return true;
             case '99': // halt
