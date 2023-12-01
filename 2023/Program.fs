@@ -2,12 +2,10 @@
 
 open AoC2023.Day01
 
-let day = 1
-
 printfn "Part 1:"
 
-part1 <| Helpers.getData day
+// part1 ()
 
 printfn "Part 2:"
 
-part2 <| Helpers.getData day
+part2 ()

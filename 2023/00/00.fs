@@ -8,5 +8,5 @@ let printLines lines =
     for line in lines do
         printfn $"{line}"
 
-let part1 () = Helpers.getTest dayNum |> printLines
-let part2 () = Helpers.getData dayNum |> printLines
+let part1 () = Helpers.getTest dayNum
+let part2 () = Helpers.getData dayNum
