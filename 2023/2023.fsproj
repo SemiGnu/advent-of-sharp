@@ -20,7 +20,14 @@
         <Content Include="01\test3.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Compile Include="Program.fs"/>
+        <Content Include="02\test">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="02\data">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Compile Include="02\02.fs" />
+        <Compile Include="Program.fs" />
     </ItemGroup>
 
 </Project>

@@ -1,12 +1,6 @@
 ﻿module AoC2023.Day00
 
-open AoC2023
+let lines = System.IO.File.ReadLines "00/data.txt"
 
-let dayNum = 0
-
-let printLines lines = 
-    for line in lines do
-        printfn $"{line}"
-
-let part1 () = Helpers.getTest dayNum
-let part2 () = Helpers.getData dayNum
+let part1 () = lines |> Seq.iter (printfn "%s")
+let part2 () = lines |> Seq.iter (printfn "%s")
