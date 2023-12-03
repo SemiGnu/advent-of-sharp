@@ -27,6 +27,13 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Compile Include="02\02.fs" />
+        <Content Include="03\test">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="03\data">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Compile Include="03\03.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
