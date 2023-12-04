@@ -3,11 +3,20 @@
 open System
 let lines = System.IO.File.ReadLines "03/test" |> Seq.toList
 
+// 4361
+// 467835
+
 type Number = {
     x:int
     y:int
     value:int
     length:int
+}
+
+type Part = {
+    x:int
+    y:int
+    value:Char
 }
 let addNumber numbers (number:string) x y = {x = x; y = y; value = int number; length = number.Length} :: numbers
 let rec parseLine (line:string) (numbers:Number list) (x:int) (y:int) =
@@ -21,9 +30,16 @@ let rec parseLines numbers lines y  =
     match lines with
     | [] -> numbers
     | line :: tail -> parseLine line [] 0 y @ parseLines numbers tail (y+1)
-let isPart x y = let c = lines[y][x] in Char.IsDigit(c) || c.Equals('.') |> not
+let isPart x y c =  not <| (Char.IsDigit(c) || c.Equals('.'))
 
+let parseParts lines = lines |> Seq.mapi (fun y line -> line |> Seq.mapi (fun x char -> if (isPart x y char) then Some ({x = x; y = y; value = char}) else None) |> Seq.choose id ) |> Seq.concat |> Seq.toList
 
-let test () = parseLines [] lines 0  |> Seq.length |> printfn "%A"
-let part1 () = lines |> Seq.iter (printfn "%s")
-let part2 () = lines |> Seq.iter (printfn "%s")
+let isAdjacent part (number:Number) = abs (part.y - number.y) <= 1 && (abs (part.x - number.x) <= 1 || abs (part.x - number.x - number.length + 1) <= 1)
+
+let partNumbers (numbers: Number list) (parts: Part list) = parts |> Seq.map (fun part -> (part, numbers |> Seq.where (isAdjacent part)))
+
+let part1 () = ((parseLines [] lines 0), (parseParts lines)) ||> partNumbers
+               |> Seq.sumBy (snd >> Seq.sumBy (fun (n:Number) -> n.value)) |> printfn "%i"
+let part2 () = ((parseLines [] lines 0), (parseParts lines)) ||> partNumbers
+               |> Seq.where (fun np -> (fst np).value = '*' && (Seq.length (snd np)) = 2)
+               |> Seq.map snd |> Seq.sumBy (Seq.toList >> (fun ns -> ns[0].value * ns[1].value)) |> printfn "%i"
