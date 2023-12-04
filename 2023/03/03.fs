@@ -30,9 +30,9 @@ let rec parseLines numbers lines y  =
     match lines with
     | [] -> numbers
     | line :: tail -> parseLine line [] 0 y @ parseLines numbers tail (y+1)
-let isPart x y c =  not <| (Char.IsDigit(c) || c.Equals('.'))
+let isPart c =  not <| (Char.IsDigit(c) || c.Equals('.'))
 
-let parseParts lines = lines |> Seq.mapi (fun y line -> line |> Seq.mapi (fun x char -> if (isPart x y char) then Some ({x = x; y = y; value = char}) else None) |> Seq.choose id ) |> Seq.concat |> Seq.toList
+let parseParts lines = lines |> Seq.mapi (fun y line -> line |> Seq.mapi (fun x char -> if (isPart char) then Some {x = x; y = y; value = char} else None) |> Seq.choose id ) |> Seq.concat |> Seq.toList
 
 let isAdjacent part (number:Number) = abs (part.y - number.y) <= 1 && (abs (part.x - number.x) <= 1 || abs (part.x - number.x - number.length + 1) <= 1)
 
