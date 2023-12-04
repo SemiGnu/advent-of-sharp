@@ -9,8 +9,8 @@
     <ItemGroup>
         <Compile Include="Helpers.fs" />
         <Compile Include="00\00.fs" />
-        <Content Include="00\test.txt"  CopyToOutputDirectory="Always"  />
-        <Content Include="00\data.txt"  CopyToOutputDirectory="Always"  />
+        <Content Include="00\test" CopyToOutputDirectory="Always" />
+        <Content Include="00\data" CopyToOutputDirectory="Always" />
         <Compile Include="01\01.fs" />
         <Content Include="01\test.txt"  CopyToOutputDirectory="Always"  />
         <Content Include="01\data.txt"  CopyToOutputDirectory="Always"  />
@@ -34,6 +34,13 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Compile Include="03\03.fs" />
+        <Compile Include="04\04.fs" />
+        <Content Include="04\test">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="04\data">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Compile Include="Program.fs" />
     </ItemGroup>
 
