@@ -19,10 +19,20 @@ let getLocation maps source  = List.fold getTarget source maps
 
 let part1 () =
     let seeds = (lines[0][7..]).Split(" ") |> Array.map uint in
-    let maps = lines |> List.skip 2 |> splitBy (fun (s:string) -> s = "")  |> List.map (List.tail >> List.map parseMapping) in
+    let maps = lines |> List.skip 2 |> splitBy (fun (s:string) -> s = "") |> List.map (List.tail >> List.map parseMapping) in
     seeds |> Array.map (getLocation maps) |> Array.min |> printfn "%A"
 
+let rec getSource mappings (target:uint)  =
+    match mappings with
+    | [] -> target
+    | m::ms -> if target >= m.target && target < m.target + m.range
+               then m.source + target - m.target
+               else getSource ms target
+
+let getSeed  = List.foldBack getSource
+let exists (seedRanges:uint array array) seed  = seedRanges |> Array.exists (fun p -> seed >= p[0] && seed < (p[0]+p[1]))
+
 let part2 () =
-    let seeds = (lines[0][7..]).Split(" ") |> Array.map uint in
+    let seedRanges = (lines[0][7..]).Split(" ") |> Array.map uint |> Array.chunkBySize 2 in
     let maps = lines |> List.skip 2 |> splitBy (fun (s:string) -> s = "")  |> List.map (List.tail >> List.map parseMapping) in
-    seeds |> Array.map (getLocation maps) |> Array.min |> printfn "%A"
+    seq {0..2147483647} |> Seq.find (uint >> getSeed maps >> exists seedRanges) |> printfn "%A"
