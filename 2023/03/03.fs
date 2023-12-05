@@ -1,7 +1,7 @@
 ﻿module AoC2023.Day03
 
 open System
-let lines = System.IO.File.ReadLines "03/test" |> Seq.toList
+let lines = System.IO.File.ReadLines "03/data" |> Seq.toList
 
 // 4361
 // 467835
@@ -43,3 +43,5 @@ let part1 () = ((parseLines [] lines 0), (parseParts lines)) ||> partNumbers
 let part2 () = ((parseLines [] lines 0), (parseParts lines)) ||> partNumbers
                |> Seq.where (fun np -> (fst np).value = '*' && (Seq.length (snd np)) = 2)
                |> Seq.map snd |> Seq.sumBy (Seq.toList >> (fun ns -> ns[0].value * ns[1].value)) |> printfn "%i"
+// 550934
+// 81997870
