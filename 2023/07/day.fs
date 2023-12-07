@@ -34,8 +34,8 @@ let scoreHand2 (c,(cards:string, bet:int)) =
     | g when g.Length = 4 -> ("2" + cards |> hex, bet)
     | _ -> (cards |> hex, bet)
 
-let scoreHand4 hand= Seq.allPairs nonJokers [hand] |> Seq.map scoreHand2 |> Seq.max
-let winnings2 lines = lines |> Seq.map parseHand2 |> Seq.sortBy (scoreHand4 >> fst) |> Seq.mapi (fun i (_,bet) -> bet*(i+1)) |> Seq.sum
+let maxScore hand= Seq.allPairs nonJokers [hand] |> Seq.map scoreHand2 |> Seq.max |> fst
+let winnings2 lines = lines |> Seq.map parseHand2 |> Seq.sortBy maxScore |> Seq.mapi (fun i (_,bet) -> bet*(i+1)) |> Seq.sum
 let part2 () = lines |> winnings2 |> printfn "%A"
 
 // 251037509
