@@ -5,7 +5,7 @@ let parseLines (lines:string array) = lines |> Array.map (fun s -> (s.Split ':' 
 let races (l:int array array) = Array.zip l[0] l[1]
 
 let winnable (t,d) c = (c * (t - c)) > d
-let allWinnable pair = seq {1..1000} |> Seq.skipWhile (not << winnable pair) |> Seq.takeWhile (winnable pair) |> Seq.length
+let allWinnable pair = Seq.initInfinite id |> Seq.skipWhile (not << winnable pair) |> Seq.takeWhile (winnable pair) |> Seq.length
 let part1 () = lines |> parseLines |> races |> Array.map allWinnable |> Array.fold (*) 1 |> printfn "%A"
 
 let realRace (lines:string array) = lines |> Array.map (fun s ->

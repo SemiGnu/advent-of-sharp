@@ -16,8 +16,8 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Compile Include="01\01.fs" />
-        <Content Include="01\test.txt"  CopyToOutputDirectory="Always"  />
-        <Content Include="01\data.txt"  CopyToOutputDirectory="Always"  />
+        <Content Include="01\test.txt" CopyToOutputDirectory="Always" />
+        <Content Include="01\data.txt" CopyToOutputDirectory="Always" />
         <Content Include="01\test2.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -67,6 +67,10 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Compile Include="Program.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.11" />
     </ItemGroup>
 
 </Project>
