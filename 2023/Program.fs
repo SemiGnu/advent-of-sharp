@@ -1,6 +1,6 @@
 ﻿module AoC2023.Main
 
-open AoC2023.Day06
+open AoC2023.Day08
 open BenchmarkDotNet.Attributes
 open BenchmarkDotNet.Running
 

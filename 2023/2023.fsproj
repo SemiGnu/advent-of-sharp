@@ -66,6 +66,19 @@
         <Content Include="07\data">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Compile Include="08\day.fs" />
+        <Content Include="08\data">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="08\test">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="08\test2">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="08\test3">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Compile Include="Program.fs" />
     </ItemGroup>
 
