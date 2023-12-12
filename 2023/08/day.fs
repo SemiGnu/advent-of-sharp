@@ -11,48 +11,48 @@ let rec traverse step (instructions:string) map loc =
     | 'L' -> traverse (step + 1) instructions map (Map.find loc map |> fst)
     | 'R' -> traverse (step + 1) instructions map (Map.find loc map |> snd)
 
-let part1 () = traverse 0 instructions map "AAA" |> printfn "%A"
+let part1 () = (instructions, map, "AAA")
+               |||> traverse 0
+               |> printfn "%A"
 
 let startNodes = map |> Map.keys |> Seq.where (fun s -> s[2] = 'A') |> Seq.toArray
-let rec spookyTraverse found step (instructions:string) map (loc:string) =
+let rec spookyTraverse times step (instructions:string) map (loc:string) =
     match instructions[step % instructions.Length] with
-    | _ when loc[2] = 'Z' && found -> step
-    | 'L' when loc[2] = 'Z' -> spookyTraverse true 0 instructions map (Map.find loc map |> fst)
-    | 'R' when loc[2] = 'Z' -> spookyTraverse true 0 instructions map (Map.find loc map |> snd)
-    | 'L' -> spookyTraverse found (step + 1) instructions map (Map.find loc map |> fst)
-    | 'R' -> spookyTraverse found (step + 1) instructions map (Map.find loc map |> snd)
+    | _ when loc[2] = 'Z' && times = 0 -> step
+    | 'L' when loc[2] = 'Z' -> spookyTraverse (times - 1) 0 instructions map (Map.find loc map |> fst)
+    | 'R' when loc[2] = 'Z' -> spookyTraverse (times - 1) 0 instructions map (Map.find loc map |> snd)
+    | 'L' -> spookyTraverse times (step + 1) instructions map (Map.find loc map |> fst)
+    | 'R' -> spookyTraverse times (step + 1) instructions map (Map.find loc map |> snd)
 
-let initSteps = startNodes |> Array.map (spookyTraverse true 0 instructions map >> int64)
-let loopSteps = startNodes |> Array.map (spookyTraverse false 0 instructions map >> int64)
-
-let indexOfLowest (steps: int64 array) = Array.findIndex ((=) (Array.min steps)) steps
-let lowArray (steps: int64 array) =
-    let min = indexOfLowest steps
-    loopSteps |> Array.mapi (fun i s -> if i = min then s else 0)
-
-let rec incrementLowest (steps: int64 array) =
-    if steps |> Array.forall ((=) steps[0])
-    then steps[0]
-    else if steps |> Array.forall ((=) 0)
-    then 0
-    else steps |> lowArray |> Array.map2 (+) steps |> incrementLowest
-
-let hm n = (((*) n) >> (+) )
+let initSteps = startNodes |> Array.map (spookyTraverse 0 0 instructions map >> int64)
+let loopSteps = startNodes |> Array.map (spookyTraverse 3 0 instructions map >> int64)
+let intersect =
+    let inc = 3756060L // loopSteps |> Array.max
+    let start = initSteps[loopSteps |> Array.findIndex ((=) inc)]
+    let rec subIntersect (start: int64) (inc: int64) =
+        let current = start + inc
+        if (initSteps, loopSteps) ||> Array.map2 (fun i s -> (current - i) % s = 0)  |> Array.forall id
+        then current
+        else subIntersect (start + inc) inc
+    subIntersect start inc
 
 
-let rec intersect max lcm n =
-    // if  Array.map2 (fun i s -> s + n * loopSteps[i]) |> Array.forall ((%) lcm >> (=) 0L)
-    if  Array.map2 (((*) n) >> (+) ) loopSteps initSteps |> Array.forall (fun s -> s % lcm = 0L)
-    then n * max
-    else intersect max lcm (n + 1L)
+let part2 () =  initSteps |> printfn "%A"
 
-let part2 () =  intersect 19512L 6009696L 1L |> printfn "%A"
-// let part2 () =  loopSteps |> printfn "%A"
 
 // 21409; 16531; 19241; 19783; 14363; 15989
 // 19512; 2439; 2981; 1897; 11924; 8672
+// 40921; 40921; 138481; 99457; ?; ?;
 // 6009696
 // 19512 2439 2981 1897 11924 8672 21409 16531 19241 19783 14363 15989
 // 469373449998698816
 // 153934641126
 // 9223372036854775807
+// 19783; 12737; 19241; 16531; 14363; 11653 =>  9177460370549
+// 1897; 8130; 2981; 2439; 11924; 8943 => 3756060
+// 7; 30; 11; 9; 44; 33 => 13860
+// 50135L; 85907L; ?; 26287L; 26287L; ?
+// 39170340 35306964 266680260 76373220 99535590 161510580
+// 127199600735809152
+// 127199600735809136
+// 11795205600000

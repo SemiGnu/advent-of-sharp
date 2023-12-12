@@ -8,7 +8,7 @@ open BenchmarkDotNet.Running
 type PartTester () =
 
     [<Benchmark>]
-    member self.part2 () = part2 ()
+    member self.part2 () = part1 ()
 
 
 [<EntryPoint>]
