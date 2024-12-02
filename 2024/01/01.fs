@@ -2,15 +2,13 @@
 
 open System
 
-let lines = System.IO.File.ReadLines "01/test.txt"
+let lines = System.IO.File.ReadLines "01/data.txt"
 let pair (line: string) = line.Split "   " |> Array.map int |> fun a -> (a[0], a[1])
 let values = lines |> Seq.toList |> List.map pair |> List.unzip
 // let values = lines |> Seq.toList |> List.map pair |> List.fold (fun (xs, ys) (x,y) -> (x::xs,y::ys)) ([],[])
-let orderedVlaues = values |> fun (xs, ys) -> (List.sort xs, List.sort ys) |> List.zip
+let totalDistance = values |> fun (xs, ys) -> (List.sort xs, List.sort ys) ||> List.map2 (fun a b -> Math.Abs(a - b)) |> List.sum
 
-let part1 () =  printfn "test"
-
-// let part1 () = values |> printfn "%i"
+let part1 () = totalDistance |> printfn "%i"
 
 let digitNumbers = [1..9]|> List.map string
 let stringNumbers = ["one"; "two"; "three"; "four"; "five"; "six"; "seven"; "eight"; "nine"]
