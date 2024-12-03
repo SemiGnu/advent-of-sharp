@@ -1,23 +1,15 @@
 ﻿module AoC2024.Day02
 
-let lines = System.IO.File.ReadLines "02/data"
+open System
 
-let parseCube (cube:string) = match cube.Split(" ") with
-                              | [| n; "red" |] -> [|(int n); 0; 0|]
-                              | [| n; "green" |] -> [|0; (int n); 0|]
-                              | [| n; "blue" |] -> [|0; 0; (int n)|]
-                              | _ -> [|0; 0; 0|]
-let parseDraw (draw:string) = draw.Split(",", System.StringSplitOptions.TrimEntries) 
-                              |> Seq.map parseCube
-                              |> Seq.fold (Seq.map2 (+)) [|0;0;0|]
-                              |> Seq.toArray
+let lines = System.IO.File.ReadLines "02/test"
 
-let parseGame (game:string) = (game.Split(":")[1]).Split(";", System.StringSplitOptions.TrimEntries) 
-                              |> Seq.map parseDraw
-                              |> Seq.toArray
+let reports = lines |> Seq.map (fun s -> s.Split ' ' |> Array.map int) |> Array.ofSeq
+let increments report = (Array.take (Array.length report - 1) report, Array.skip 1 report) ||> Array.map2 (fun x y -> x - y)
+let isSafe incs = (Array.forall (fun x -> x < 0) incs || Array.forall (fun x -> x > 0) incs) && Array.forall (fun (x: int) -> Math.Abs(x) < 4) incs
+let safeReports = reports |> Array.filter (increments >> isSafe)
+let part1 () = safeReports |> Array.length |> printfn "%A"
 
-let possible draw = draw |> Seq.fold2 (fun s m d -> s && m >= d) true [|12;13;14|]
-let part1 () = lines |> Seq.map parseGame  |> Seq.mapi (fun i game -> if (Seq.forall possible game) then i + 1 else 0) |> Seq.sum |> printfn "%i"
-
-let minPossible =  Seq.fold (Seq.map2 max) [|0;0;0|]
-let part2 () = lines |> Seq.sumBy (parseGame >> minPossible >> Seq.fold (*) 1) |> printfn "%i"
+let isEvenSafer incs = (incs |> Array.filter (fun x -> x < 0) |> Array.length < 2 || incs |> Array.filter (fun x -> x > 0) |> Array.length < 2) && incs |> Array.filter (fun (x: int) -> Math.Abs(x) > 3) |> Array.length < 2
+let evenSaferReports = reports |> Array.filter (increments >> isEvenSafer)
+let part2 () = evenSaferReports |> Array.length |> printfn "%A"
